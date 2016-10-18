@@ -33,7 +33,6 @@ public class MainActivity extends Activity implements ZXingScannerView.ResultHan
 
     public void sqlSettings(View v) {
         startActivity(new Intent(MainActivity.this, sql_main_menu.class));
-        //startActivity(new Intent(MainActivity.this, SQL_manipulator.class));
     }
 
     public void sqlManipulator(View v) {
