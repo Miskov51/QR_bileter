@@ -94,7 +94,7 @@ public class MainActivity extends Activity implements ZXingScannerView.ResultHan
 
     public void aktywujKod(Long QRcode){
         DBAdapter myDB; //tworzenie zmiennej do trzymania instancji
-        myDB = new DBAdapter(this); //tworzenie instancji, this jest wymagane żeby odnosiło się do tego frameworka ale nie wiem dlaczego
+        myDB = new DBAdapter(this); //tworzenie instancji,  this jest wymagane żeby odnosiło się do tego frameworka ale nie wiem dlaczego
         myDB.open();
         DateFormat df = new SimpleDateFormat(" d.MM.yyyy, HH:mm:ss");
         String date = df.format(Calendar.getInstance().getTime());
