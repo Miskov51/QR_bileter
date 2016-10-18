@@ -58,4 +58,24 @@
         android:onClick="QuitApp"
         android:id="@+id/button13" />
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="10"
+        android:layout_above="@+id/button13"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="36dp"
+        android:id="@+id/editText" />
+
+    <Button
+        android:text="Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/editText"
+        android:layout_alignEnd="@+id/button13"
+        android:layout_marginBottom="36dp"
+        android:id="@+id/button15"
+        android:onClick="ZnajdzQR" />
+
 </RelativeLayout>

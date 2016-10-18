@@ -8,4 +8,27 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+
+    <style name="AlertDialogBrak" >
+        <item name="android:textColor">#000000</item>
+        <item name="android:background">#FF0000</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="AlertDialogStary" >
+        <item name="android:textColor">#000000</item>
+        <item name="android:background">#FF0000</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="AlertDialogAktywacja" >
+        <item name="android:textColor">#000000</item>
+        <item name="android:background">#00FF00</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:textSize">40sp</item>
+    </style>
+
+
 </resources>

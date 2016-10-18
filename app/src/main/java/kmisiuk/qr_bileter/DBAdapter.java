@@ -26,46 +26,41 @@ public class DBAdapter {
     private static final String TAG = "DBAdapter";
 
     // DB  Fields
-    public static final String KEY_ROWID = "_id";
+    public static final String KEY_ID = "_id";
     public static final int COL_ROWID = 0;
     /*
      * CHANGE 1:
      */
     // TODO: Setup your fields here:
-    public static final String KEY_NAME = "name";
-    public static final String KEY_STUDENTNUM = "studentnum";
+    public static final String KEY_QR = "qr_code";
+    public static final String KEY_ACT_TIME = "activation_time";
     //public static final String KEY_FAVCOLOUR = "favcolour";
 
-    // TODO: Setup your field numbers here (0 = KEY_ROWID, 1=...)
+    // TODO: Setup your field numbers here (0 = KEY_ID, 1=...)
     public static final int COL_NAME = 1;
     public static final int COL_STUDENTNUM = 2;
     //public static final int COL_FAVCOLOUR = 3;
 
 
-    public static final String[] ALL_KEYS = new String[] {KEY_ROWID, KEY_NAME, KEY_STUDENTNUM};
+    public static final String[] ALL_KEYS = new String[] {KEY_ID, KEY_QR, KEY_ACT_TIME};
 
-    // DB info: it's name, and the table we are using (just one).
+    // DB info: it's qr_code, and the table we are using (just one).
     public static final String DATABASE_NAME = "MyDb";
     public static final String DATABASE_TABLE = "mainTable";
     // Track DB version if a new version of your app changes the format.
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 5;
 
     private static final String DATABASE_CREATE_SQL =
             "create table " + DATABASE_TABLE
-                    + " (" + KEY_ROWID + " integer primary key autoincrement, "
+                    + " (" + KEY_ID + " integer primary key autoincrement, "
 
 			/*
 			 * CHANGE 2:
 			 */
                     // TODO: Place your fields here!
-                    // + KEY_{...} + " {type} not null"
-                    //	- Key is the column name you created above.
-                    //	- {type} is one of: text, integer, real, blob
-                    //		(http://www.sqlite.org/datatype3.html)
-                    //  - "not null" means it is a required field (must be given a value).
-                    // NOTE: All must be comma separated (end of line!) Last one must have NO comma!!
-                    + KEY_NAME + " text not null, "
-                    + KEY_STUDENTNUM + " integer not null"
+                    
+                    + KEY_QR + " text not null, "
+                    + KEY_ACT_TIME + " integer not null"
 
 
                     // Rest  of creation:
@@ -98,7 +93,7 @@ public class DBAdapter {
     }
 
     // Add a new set of values to the database.
-    public long insertRow(long name, String studentNum) {
+    public long insertRow(long qr_code, String studentNum) {
 		/*
 		 * CHANGE 3:
 		 */
@@ -106,8 +101,8 @@ public class DBAdapter {
         // TODO: Also change the function's arguments to be what you need!
         // Create row's data:
         ContentValues initialValues = new ContentValues();
-        initialValues.put(KEY_NAME, name);
-        initialValues.put(KEY_STUDENTNUM, studentNum);
+        initialValues.put(KEY_QR, qr_code);
+        initialValues.put(KEY_ACT_TIME, studentNum);
 
 
         // Insert it into the database.
@@ -116,13 +111,13 @@ public class DBAdapter {
 
     // Delete a row from the database, by rowId (primary key)
     public boolean deleteRow(long rowId) {
-        String where = KEY_ROWID + "=" + rowId;
+        String where = KEY_ID + "=" + rowId;
         return db.delete(DATABASE_TABLE, where, null) != 0;
     }
 
     public void deleteAll() {
         Cursor c = getAllRows();
-        long rowId = c.getColumnIndexOrThrow(KEY_ROWID);
+        long rowId = c.getColumnIndexOrThrow(KEY_ID);
         if (c.moveToFirst()) {
             do {
                 deleteRow(c.getLong((int) rowId));
@@ -143,8 +138,8 @@ public class DBAdapter {
     }
 
     // Get a specific row (by rowId)
-    public Cursor getRow(long rowId) {
-        String where = KEY_ROWID + "=" + rowId;
+    public Cursor getRow(long rowId) {   //TODO ta metode prawdopodobnie można wywalić
+        String where = KEY_ID + "=" + rowId;
         Cursor c = 	db.query(true, DATABASE_TABLE, ALL_KEYS,
                 where, null, null, null, null, null);
         if (c != null) {
@@ -152,10 +147,28 @@ public class DBAdapter {
         }
         return c;
     }
-
+    /*
     // Change an existing row to be equal to new data.
-    public boolean updateRow(long rowId, long name, int studentNum) {
-        String where = KEY_ROWID + "=" + rowId;
+    public boolean updateRow(long rowId, long qr_code, int studentNum) {
+        String where = KEY_ID + "=" + rowId;
+
+
+		 // CHANGE 4:
+
+        // TODO: Update data in the row with new fields.
+        // TODO: Also change the function's arguments to be what you need!
+        // Create row's data:
+        ContentValues newValues = new ContentValues();
+        newValues.put(KEY_QR, qr_code);
+        newValues.put(KEY_ACT_TIME, studentNum);
+
+
+        // Insert it into the database.
+        return db.update(DATABASE_TABLE, newValues, where, null) != 0;
+    }*/
+
+    public boolean updateRow(long qr_code,String data) {
+        String where = KEY_QR + "=" + qr_code;
 
 		/*
 		 * CHANGE 4:
@@ -164,14 +177,35 @@ public class DBAdapter {
         // TODO: Also change the function's arguments to be what you need!
         // Create row's data:
         ContentValues newValues = new ContentValues();
-        newValues.put(KEY_NAME, name);
-        newValues.put(KEY_STUDENTNUM, studentNum);
+        newValues.put(KEY_QR, qr_code);
+        newValues.put(KEY_ACT_TIME, data);
 
 
         // Insert it into the database.
         return db.update(DATABASE_TABLE, newValues, where, null) != 0;
     }
 
+    public long findQR(long qr_code) {
+        String where = KEY_QR + "=" + qr_code;
+        Cursor c = 	db.query(true, DATABASE_TABLE, ALL_KEYS,
+                where, null, null, null, null, null);
+        if (c.getCount() > 0) {
+            c.moveToFirst();
+            return c.getInt(0);
+        }
+        else return -1;
+    }
+
+    public String checkAktivation(long qr_code) {
+        String where = KEY_QR + "=" + qr_code;
+        Cursor c = 	db.query(true, DATABASE_TABLE, ALL_KEYS,
+                where, null, null, null, null, null);
+        if (c.getCount() > 0) {
+            c.moveToFirst();
+            return c.getString(2);
+        }
+        else return "Nie odnaleziono";
+    }
 
 
     /////////////////////////////////////////////////////////////////////

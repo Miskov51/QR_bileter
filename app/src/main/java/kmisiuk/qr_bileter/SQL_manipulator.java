@@ -16,6 +16,7 @@ public class SQL_manipulator extends AppCompatActivity {
 
     DBAdapter myDB; //tworzenie zmiennej do trzymania instancji
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +60,7 @@ public class SQL_manipulator extends AppCompatActivity {
         */
     }
 
+
     public void onClick_WyczyscWszystko(View v){
         displayText("Wyczyszczono baze");
         myDB.deleteAll();
@@ -82,7 +84,7 @@ public class SQL_manipulator extends AppCompatActivity {
                 String StudentNumber = kursor.getString(2);
 
                 //składanie odczytanych danych do kupy
-                tresc += "ID=" + id + "   QR=" + name + "   Data aktywacji=" + StudentNumber +"\n";
+                tresc += "ID=" + id + "   QR=" + name + "   Aktywacja=" + StudentNumber +"\n";
             }while(kursor.moveToNext()); //wyjdzie z pętli gdy kursor nie ma możliwości przejścia dalej
         }
         kursor.close(); //podobno trzeba zamykać kursor po użyciu inaczej jest "resource leak"
