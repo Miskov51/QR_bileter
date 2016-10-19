@@ -17,7 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true">
 
 
         <Button
@@ -44,13 +45,14 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/linearLayout2"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:id="@+id/button14" />
 
 
     </LinearLayout>
 
     <Button
-        android:text="Wyjdź"
+        android:text="@string/quit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -73,6 +75,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/editText"
+        android:layout_alignParentLeft="true"
         android:layout_alignEnd="@+id/button13"
         android:layout_marginBottom="36dp"
         android:id="@+id/button15"

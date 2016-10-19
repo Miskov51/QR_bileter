@@ -6,7 +6,6 @@ package kmisiuk.qr_bileter;
 
 // ------------------------------------ DBADapter.java ---------------------------------------------
 
-    //test githuba kl
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -20,101 +19,86 @@ import android.util.Log;
 public class DBAdapter {
 
     /////////////////////////////////////////////////////////////////////
-    //	Constants & Data
+    //	Deklaracje
     /////////////////////////////////////////////////////////////////////
-    // For logging:
-    private static final String TAG = "DBAdapter";
 
-    // DB  Fields
+
+    // definiowanie nazw dla kolumn
     public static final String KEY_ID = "_id";
-    public static final int COL_ROWID = 0;
-    /*
-     * CHANGE 1:
-     */
-    // TODO: Setup your fields here:
     public static final String KEY_QR = "qr_code";
     public static final String KEY_ACT_TIME = "activation_time";
-    //public static final String KEY_FAVCOLOUR = "favcolour";
 
-    // TODO: Setup your field numbers here (0 = KEY_ID, 1=...)
-    public static final int COL_NAME = 1;
-    public static final int COL_STUDENTNUM = 2;
-    //public static final int COL_FAVCOLOUR = 3;
+    // na razie zbędne ale moze z tego skorzystam - odwołania po numerach kolumn (0 = KEY_ID, 1=...)
+    public static final int COL_KEY_ID = 0;
+    public static final int COL_KEY_QR = 1;
+    public static final int COL_KEY_ACT_TIME = 2;
 
-
+    //deklaracja tablicy zawierającej nazwy wszystkich kolumn
     public static final String[] ALL_KEYS = new String[] {KEY_ID, KEY_QR, KEY_ACT_TIME};
 
-    // DB info: it's qr_code, and the table we are using (just one).
+    // deklaracja bazy danych oraz jej tablicy.
     public static final String DATABASE_NAME = "MyDb";
     public static final String DATABASE_TABLE = "mainTable";
-    // Track DB version if a new version of your app changes the format.
+
+    // wersjonowanie bazy danych
     public static final int DATABASE_VERSION = 5;
 
+
+    // Tworzenie tablicy
     private static final String DATABASE_CREATE_SQL =
             "create table " + DATABASE_TABLE
                     + " (" + KEY_ID + " integer primary key autoincrement, "
-
-			/*
-			 * CHANGE 2:
-			 */
-                    // TODO: Place your fields here!
-                    
                     + KEY_QR + " text not null, "
-                    + KEY_ACT_TIME + " integer not null"
-
-
-                    // Rest  of creation:
+                    + KEY_ACT_TIME + " integer not null"   //// TODO: 2016-10-19 ogarnąć czemu działa integer i czy zmiana na text spowoduje problem
                     + ");";
 
-    // Context of application who uses us.
+    // Context of application who uses us. NI chu chu nie wiem co to TODO:  sprawdzić działanie
     private final Context context;
 
-    private DatabaseHelper myDBHelper;
+    private DatabaseHelper myDBHelper; //zmienna do obsługi działań na bazie (kod na końcu pliku w databaseHelper)
     private SQLiteDatabase db;
 
+
+
+
     /////////////////////////////////////////////////////////////////////
-    //	Public methods:
+    //	Metody publiczne
     /////////////////////////////////////////////////////////////////////
 
-    public DBAdapter(Context ctx) {
+    public DBAdapter(Context ctx) {   //// TODO: 2016-10-19 sprawdzić co to robi
         this.context = ctx;
         myDBHelper = new DatabaseHelper(context);
     }
 
-    // Open the database connection.
+    // otwieranie połączenia z bazą
     public DBAdapter open() {
         db = myDBHelper.getWritableDatabase();
         return this;
     }
 
-    // Close the database connection.
+    // Zamykanie połączenia z bazą
     public void close() {
         myDBHelper.close();
     }
 
-    // Add a new set of values to the database.
+    // Dodawanie nowych wpisów do bazy
     public long insertRow(long qr_code, String studentNum) {
-		/*
-		 * CHANGE 3:
-		 */
-        // TODO: Update data in the row with new fields.
-        // TODO: Also change the function's arguments to be what you need!
-        // Create row's data:
+
         ContentValues initialValues = new ContentValues();
         initialValues.put(KEY_QR, qr_code);
         initialValues.put(KEY_ACT_TIME, studentNum);
-
 
         // Insert it into the database.
         return db.insert(DATABASE_TABLE, null, initialValues);
     }
 
-    // Delete a row from the database, by rowId (primary key)
+    // Skasuj wpis o odpowiednim ID (primary key)
     public boolean deleteRow(long rowId) {
         String where = KEY_ID + "=" + rowId;
         return db.delete(DATABASE_TABLE, where, null) != 0;
     }
 
+    //czyszczenie wszystkich wpisów
     public void deleteAll() {
         Cursor c = getAllRows();
         long rowId = c.getColumnIndexOrThrow(KEY_ID);
@@ -126,7 +110,7 @@ public class DBAdapter {
         c.close();
     }
 
-    // Return all data in the database.
+    // Pobierz wszystkie wpisy
     public Cursor getAllRows() {
         String where = null;
         Cursor c = 	db.query(true, DATABASE_TABLE, ALL_KEYS,
@@ -137,8 +121,8 @@ public class DBAdapter {
         return c;
     }
 
-    // Get a specific row (by rowId)
-    public Cursor getRow(long rowId) {   //TODO ta metode prawdopodobnie można wywalić
+    // pobierz konkretny wpis o odpowiednim ID (primary key)
+    public Cursor getRow(long rowId) {   //TODO ta metode prawdopodobnie można wywalić, raczej się nie przyda
         String where = KEY_ID + "=" + rowId;
         Cursor c = 	db.query(true, DATABASE_TABLE, ALL_KEYS,
                 where, null, null, null, null, null);
@@ -147,43 +131,22 @@ public class DBAdapter {
         }
         return c;
     }
-    /*
-    // Change an existing row to be equal to new data.
-    public boolean updateRow(long rowId, long qr_code, int studentNum) {
-        String where = KEY_ID + "=" + rowId;
 
 
-		 // CHANGE 4:
-
-        // TODO: Update data in the row with new fields.
-        // TODO: Also change the function's arguments to be what you need!
-        // Create row's data:
-        ContentValues newValues = new ContentValues();
-        newValues.put(KEY_QR, qr_code);
-        newValues.put(KEY_ACT_TIME, studentNum);
-
-
-        // Insert it into the database.
-        return db.update(DATABASE_TABLE, newValues, where, null) != 0;
-    }*/
-
+    //aktualizuj wpis o odpowiednim id (numer biletu z KEY_QR)
     public boolean updateRow(long qr_code,String data) {
         String where = KEY_QR + "=" + qr_code;
 
-		/*
-		 * CHANGE 4:
-		 */
-        // TODO: Update data in the row with new fields.
-        // TODO: Also change the function's arguments to be what you need!
-        // Create row's data:
         ContentValues newValues = new ContentValues();
         newValues.put(KEY_QR, qr_code);
         newValues.put(KEY_ACT_TIME, data);
 
-
         // Insert it into the database.
         return db.update(DATABASE_TABLE, newValues, where, null) != 0;
     }
+
+    //znajdź numer biletu
+    //@Return ID dla danego numeru biletu
 
     public long findQR(long qr_code) {
         String where = KEY_QR + "=" + qr_code;
@@ -196,6 +159,8 @@ public class DBAdapter {
         else return -1;
     }
 
+    //sprawdza czy bilet posiada jakąś date aktywacji (a konkretnie czy cokolwiek jest wpisane)
+    //@Return zwraca wpis z pola daty aktywacji lub gdy jest puste to "Nie odnaleziono"
     public String checkAktivation(long qr_code) {
         String where = KEY_QR + "=" + qr_code;
         Cursor c = 	db.query(true, DATABASE_TABLE, ALL_KEYS,
@@ -229,7 +194,7 @@ public class DBAdapter {
 
         @Override
         public void onUpgrade(SQLiteDatabase _db, int oldVersion, int newVersion) {
-            Log.w(TAG, "Upgrading application's database from version " + oldVersion
+            Log.w("DBAdapter", "Upgrading application's database from version " + oldVersion
                     + " to " + newVersion + ", which will destroy all old data!");
 
             // Destroy old database:
