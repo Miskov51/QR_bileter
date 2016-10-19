@@ -75,8 +75,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/editText"
-        android:layout_alignParentLeft="true"
         android:layout_alignEnd="@+id/button13"
+        android:layout_alignRight="@+id/button13"
         android:layout_marginBottom="36dp"
         android:id="@+id/button15"
         android:onClick="ZnajdzQR" />
