@@ -21,4 +21,8 @@ public class sql_main_menu extends AppCompatActivity {
         startActivity(new Intent(sql_main_menu.this, SQL_manipulator.class));
     }
 
+    public void CSVmanipulator(View v){
+        startActivity(new Intent(sql_main_menu.this, CSVreader.class));
+    }
+
 }

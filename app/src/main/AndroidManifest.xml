@@ -18,7 +18,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".sql_main_menu" />
-        <activity android:name=".SQL_manipulator"></activity>
+        <activity android:name=".SQL_manipulator"/>
+        <activity android:name=".CSVreader"/>
     </application>
 
 </manifest>
