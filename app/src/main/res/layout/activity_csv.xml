@@ -1,12 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:text="Button"
+    <LinearLayout
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
         android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:text="Pliki w folderze CSV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:id="@+id/listaPlikow"
+            android:fadeScrollbars="false"
+            android:focusable="true"
+            android:layout_height="200dp" />
+
+        <Button
+            android:text="Odśwież listę"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="listaPlikow"
+            android:id="@+id/button7" />
+
+        <Button
+            android:text="Załaduj plik"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button15" />
+
+        <Button
+            android:text="Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/button16"
+            android:onClick="ladowanieCSV"
+            tools:text="PlikRAW" />
+
+    </LinearLayout>
+
+    <Button
+        android:text="Back"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="ladowanieCSV"
-        android:id="@+id/button" />
-</LinearLayout>
+        android:id="@+id/button"
+        android:onClick="csvBack"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>
