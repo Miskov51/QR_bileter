@@ -38,12 +38,11 @@
             android:id="@+id/button15" />
 
         <Button
-            android:text="Button"
+            android:text="Plik RAW"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/button16"
-            android:onClick="ladowanieCSV"
-            tools:text="PlikRAW" />
+            android:onClick="ladowanieCSV"/>
 
     </LinearLayout>
 

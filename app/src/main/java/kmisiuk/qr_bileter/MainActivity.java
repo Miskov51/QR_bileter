@@ -86,7 +86,7 @@ public class MainActivity extends Activity implements ZXingScannerView.ResultHan
         DBAdapter myDB; //tworzenie zmiennej do trzymania instancji
         myDB = new DBAdapter(this); //tworzenie instancji, this jest wymagane żeby odnosiło się do "tego frameworka" ale nie wiem dlaczego
         myDB.open();
-        long NewID = myDB.insertRow(QRcode,"");
+        long NewID = myDB.insertRow(QRcode);
         myDB.close();
     }
 

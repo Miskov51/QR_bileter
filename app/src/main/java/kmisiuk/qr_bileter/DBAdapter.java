@@ -12,7 +12,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
+
+import java.util.ArrayList;
 
 
 // Search for "TODO", and make the appropriate changes.
@@ -41,7 +44,7 @@ public class DBAdapter {
     public static final String DATABASE_TABLE = "mainTable";
 
     // wersjonowanie bazy danych
-    public static final int DATABASE_VERSION = 5;
+    public static final int DATABASE_VERSION = 7;
 
 
     // Tworzenie tablicy
@@ -49,7 +52,7 @@ public class DBAdapter {
             "create table " + DATABASE_TABLE
                     + " (" + KEY_ID + " integer primary key autoincrement, "
                     + KEY_QR + " text not null, "
-                    + KEY_ACT_TIME + " integer not null"   //// TODO: 2016-10-19 ogarnąć czemu działa integer i czy zmiana na text spowoduje problem
+                    + KEY_ACT_TIME + " text default ''"
                     + ");";
 
     // Context of application who uses us. NI chu chu nie wiem co to TODO:  sprawdzić działanie
@@ -82,15 +85,31 @@ public class DBAdapter {
     }
 
     // Dodawanie nowych wpisów do bazy
-    public long insertRow(long qr_code, String studentNum) {
+    public long insertRow(long qr_code) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(KEY_QR, qr_code);
-        initialValues.put(KEY_ACT_TIME, studentNum);
 
         // Insert it into the database.
         return db.insert(DATABASE_TABLE, null, initialValues);
     }
+
+
+    //szybki insert wielu wpisów przy użyciu jednej tranzakcji
+    public void insertALLrows(ArrayList <Long> listaQR) {
+        String sql = "INSERT INTO "+ DATABASE_TABLE +" ("+KEY_QR+") VALUES (?);";
+        SQLiteStatement statement = db.compileStatement(sql);
+        db.beginTransaction();
+        for (int i = 0; i<listaQR.size(); i++) {
+            statement.clearBindings();
+            statement.bindLong(1, listaQR.get(i));
+
+            statement.execute();
+        }
+        db.setTransactionSuccessful();
+        db.endTransaction();
+    }
+
 
     // Skasuj wpis o odpowiednim ID (primary key)
     public boolean deleteRow(long rowId) {
@@ -100,14 +119,9 @@ public class DBAdapter {
 
     //czyszczenie wszystkich wpisów
     public void deleteAll() {
-        Cursor c = getAllRows();
-        long rowId = c.getColumnIndexOrThrow(KEY_ID);
-        if (c.moveToFirst()) {
-            do {
-                deleteRow(c.getLong((int) rowId));
-            } while (c.moveToNext());
-        }
-        c.close();
+        db.delete(DATABASE_TABLE, null,null);
+        //bajer niżej resetuje autoinkrementowane ID do wartości 0;
+        db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + DATABASE_TABLE + "'");
     }
 
     // Pobierz wszystkie wpisy

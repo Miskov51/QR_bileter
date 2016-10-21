@@ -6,6 +6,7 @@ package kmisiuk.qr_bileter;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,6 +31,22 @@ public class CSVreader extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_csv);
         plikCSV = getResources().openRawResource(R.raw.sample);
+
+           // File mediaStorageDir = new File(Environment.aaazcx(Environment.DIRECTORY_PICTURES), "MyDir");
+        //mediaStorageDir.mkdirs();
+        String karta = Environment.getExternalStorageState(); //do sprawdzenia czy karta sd jest dostepna
+            if (Environment.MEDIA_MOUNTED.equals(karta)) {
+
+                File folderCSV = new File("/sdcard/PlikiCSV");
+
+                if (!folderCSV.exists()) {
+                    folderCSV.mkdirs();
+                    Log.d("udane", "zrobiono folder");
+                } else
+                    Log.d("error", "dir. already exists");
+
+            }else
+                Log.d("error", "Brak karty SD");
     }
 
     public void csvBack(View v){
@@ -39,40 +57,45 @@ public class CSVreader extends AppCompatActivity {
         ListView list ;
         ArrayAdapter<String> adapter ;
 
+            String path = Environment.getExternalStorageDirectory().toString()+"/PlikiCSV";
+            File directory = new File(path);
+            File[] files = directory.listFiles();
+
+            ArrayList<String> liczbyT = new ArrayList<String>();
+
+            for (int i = 0; i < files.length; i++)
+            {
+                liczbyT.add(files[i].getName().toString()); //dodaje do listy samą nazwę pliku
+            }
 
             list = (ListView) findViewById(R.id.listaPlikow);
 
-            String cars[] = {"1", "2", "3", "4","5", "6", "7", "8", "9", "10", "11", "12", "13"};
-
-            ArrayList<String> carL = new ArrayList<String>();
-            carL.addAll( Arrays.asList(cars) );
-
-            adapter = new ArrayAdapter<String>(this, R.layout.row, carL);
+            adapter = new ArrayAdapter<String>(this, R.layout.row, liczbyT);
 
             list.setAdapter(adapter);
     }
 
-    public void ladowanieCSV(View v){
+    public void ladowanieCSV(View v){ //todo połączyć tą procedurę z listą plików aby ładował wybrany plik
     BufferedReader reader = new BufferedReader(new InputStreamReader(plikCSV));
         try {
             String csvLine;
+            ArrayList<Long> listaWpisow = new ArrayList<Long>();
+            int i=0;
             DBAdapter myDB; //tworzenie zmiennej do trzymania instancji
             myDB = new DBAdapter(this); //tworzenie instancji, this jest wymagane żeby odnosiło się do "tego frameworka" ale nie wiem dlaczego
             myDB.open();
-            while ((csvLine = reader.readLine()) != null) {
 
-
+            while ((csvLine = reader.readLine()) != null) { //dopuki jest coś w pliku
 
                 liniaCSV=csvLine.split(";");
-                try{
+                listaWpisow.add(Long.parseLong(liniaCSV[1]));
+            }
+            try{
 
-                   // Log.v("Wiersz",""+liniaCSV[0]+" ; "+liniaCSV[1]) ;
-                    myDB.insertRow(Long.valueOf(liniaCSV[1]),"");
+                myDB.insertALLrows(listaWpisow);
 
-
-                }catch (Exception e){
-                    Log.e("Unknown fuck",e.toString());
-                }
+            }catch (Exception e){
+                Log.e("Unknown fuck",e.toString());
             }
             myDB.close();
         }
