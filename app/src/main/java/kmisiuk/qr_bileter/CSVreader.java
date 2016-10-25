@@ -53,7 +53,7 @@ public class CSVreader extends AppCompatActivity {
         startActivity(new Intent(CSVreader.this, sql_main_menu.class));
     }
 
-    public void listaPlikow(View v){
+    public void listaPlikow(View v){ //todo uwzględnić przypadek jak nie będzie plików
         ListView list ;
         ArrayAdapter<String> adapter ;
 
