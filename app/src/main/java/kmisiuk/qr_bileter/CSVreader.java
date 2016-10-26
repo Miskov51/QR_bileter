@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import java.io.BufferedReader;
@@ -32,10 +33,9 @@ public class CSVreader extends AppCompatActivity {
         setContentView(R.layout.activity_csv);
         plikCSV = getResources().openRawResource(R.raw.sample);
 
-           // File mediaStorageDir = new File(Environment.aaazcx(Environment.DIRECTORY_PICTURES), "MyDir");
-        //mediaStorageDir.mkdirs();
-        String karta = Environment.getExternalStorageState(); //do sprawdzenia czy karta sd jest dostepna
-            if (Environment.MEDIA_MOUNTED.equals(karta)) {
+
+        String karta = Environment.getExternalStorageState(); //pobiera status karty
+            if (Environment.MEDIA_MOUNTED.equals(karta)) {  //do sprawdzenia czy karta sd jest dostepna
 
                 File folderCSV = new File("/sdcard/PlikiCSV");
 
@@ -47,13 +47,19 @@ public class CSVreader extends AppCompatActivity {
 
             }else
                 Log.d("error", "Brak karty SD");
+
+        //te dwa niżej powodują symulacje naciśnięcia przycisku odświerzania listy plików csf
+        Button btn = (Button)findViewById(R.id.buttonRefreshCSVlist);
+        btn.performClick();
+
+
     }
 
     public void csvBack(View v){
         startActivity(new Intent(CSVreader.this, sql_main_menu.class));
     }
 
-    public void listaPlikow(View v){ //todo uwzględnić przypadek jak nie będzie plików
+    public void listaPlikow(View v){
         ListView list ;
         ArrayAdapter<String> adapter ;
 
@@ -62,17 +68,26 @@ public class CSVreader extends AppCompatActivity {
             File[] files = directory.listFiles();
 
             ArrayList<String> liczbyT = new ArrayList<String>();
+            if (files==null) {
+                String karta = Environment.getExternalStorageState(); //pobiera aktualny status karty
+                if (Environment.MEDIA_MOUNTED.equals(karta)) { //do sprawdzenia czy karta sd jest dostepna
+                    liczbyT.add("Brak plików w folderze");   //todo zmienić to na zmienną do podmiany języka
+                }
+                    else
+                        liczbyT.add("Brak karty pamięci");
+            }else{
+                for (int i = 0; i < files.length; i++) {
+                    liczbyT.add(files[i].getName().toString()); //dodaje do listy samą nazwę pliku
+                }
 
-            for (int i = 0; i < files.length; i++)
-            {
-                liczbyT.add(files[i].getName().toString()); //dodaje do listy samą nazwę pliku
             }
 
-            list = (ListView) findViewById(R.id.listaPlikow);
 
-            adapter = new ArrayAdapter<String>(this, R.layout.row, liczbyT);
+        list = (ListView) findViewById(R.id.listaPlikow);
 
-            list.setAdapter(adapter);
+        adapter = new ArrayAdapter<String>(this, R.layout.row, liczbyT);
+
+        list.setAdapter(adapter);
     }
 
     public void ladowanieCSV(View v){ //todo połączyć tą procedurę z listą plików aby ładował wybrany plik
