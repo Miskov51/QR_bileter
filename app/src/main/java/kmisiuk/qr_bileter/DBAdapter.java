@@ -14,6 +14,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -184,6 +185,18 @@ public class DBAdapter {
             return c.getString(2);
         }
         else return "Nie odnaleziono";
+    }
+
+    public void listaTablicSQL(){  //todo przerobić żeby zwracało listę tablic a nie robiło println 
+        Cursor c = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' and name<>'android_metadata' and name<>'sqlite_sequence'", null); //wycięte te dwie nazwy stałych tabel
+
+        if (c.moveToFirst()) {
+            while ( !c.isAfterLast() ) {
+                System.out.println(c.getString(0));
+                c.moveToNext();
+            }
+        }
+
     }
 
 
